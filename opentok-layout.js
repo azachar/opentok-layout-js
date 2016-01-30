@@ -9,7 +9,7 @@
  *  @License: Released under the MIT license (http://opensource.org/licenses/MIT)
 **/
 
-// TODO: don't rely on internal OT.$ API.
+// TODO: don't rely on internal openTokInternalApi API.
 // in CommonJS context, this should be a `require()`d dependency.
 // in browser globals context, ...? (when using bower, there are dependencies that it has handled
 // for you, so these might be safe to assume)
@@ -22,6 +22,8 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
 }
 
 (function($) {
+    var openTokInternalApi = OT.$ || OT.getHelper(); //getHelper works with the official cordova opentok.js
+
     var positionElement = function positionElement(elem, x, y, width, height, animate) {
         var targetPosition = {
             left: x + "px",
@@ -51,15 +53,15 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
                 if (animate.complete) animate.complete.call(this);
             });
         } else {
-            // NOTE: internal OT.$ API
-            OT.$.css(elem, targetPosition);
+            // NOTE: internal openTokInternalApi API
+            openTokInternalApi.css(elem, targetPosition);
         }
         fixAspectRatio();
     };
 
     var getCSSNumber = function (elem, prop) {
-        // NOTE: internal OT.$ API
-        var cssStr = OT.$.css(elem, prop);
+        // NOTE: internal openTokInternalApi API
+        var cssStr = openTokInternalApi.css(elem, prop);
         return cssStr ? parseInt(cssStr, 10) : 0;
     };
 
@@ -69,14 +71,14 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
     };
 
     var getHeight = function (elem) {
-        // NOTE: internal OT.$ API
-        var heightStr = OT.$.height(elem);
+        // NOTE: internal openTokInternalApi API
+        var heightStr = openTokInternalApi.height(elem);
         return heightStr ? parseInt(heightStr, 10) : 0;
     };
 
     var getWidth = function (elem) {
-        // NOTE: internal OT.$ API
-        var widthStr = OT.$.width(elem);
+        // NOTE: internal openTokInternalApi API
+        var widthStr = openTokInternalApi.width(elem);
         return widthStr ? parseInt(widthStr, 10) : 0;
     };
 
@@ -171,8 +173,8 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
                 x += vidRatio.targetWidth;
             }
 
-            // NOTE: internal OT.$ API
-            OT.$.css(elem, "position", "absolute");
+            // NOTE: internal openTokInternalApi API
+            openTokInternalApi.css(elem, "position", "absolute");
             var actualWidth = vidRatio.targetWidth - getCSSNumber(elem, "paddingLeft") -
                             getCSSNumber(elem, "paddingRight") -
                             getCSSNumber(elem, "marginLeft") -
@@ -192,13 +194,13 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
     };
 
     var filterDisplayNone = function (element) {
-        // NOTE: internal OT.$ API
-        return OT.$.css(element, "display") !== "none";
+        // NOTE: internal openTokInternalApi API
+        return openTokInternalApi.css(element, "display") !== "none";
     };
 
     var layout = function layout(container, opts, fixedRatio) {
-        // NOTE: internal OT.$ API
-        if (OT.$.css(container, "display") === "none") {
+        // NOTE: internal openTokInternalApi API
+        if (openTokInternalApi.css(container, "display") === "none") {
             return;
         }
         var id = container.getAttribute("id");
@@ -264,8 +266,8 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
     };
 
     exports.initLayoutContainer = function(container, opts) {
-        // NOTE: internal OT.$ API
-        opts = OT.$.defaults(opts || {}, {
+        // NOTE: internal openTokInternalApi API
+        opts = openTokInternalApi.defaults(opts || {}, {
             maxRatio: 3/2,
             minRatio: 9/16,
             fixedRatio: false,
@@ -277,8 +279,8 @@ if (typeof module === 'undefined' || typeof module.exports === 'undefined') {
             bigMinRatio: 9/16,
             bigFirst: true
         });
-        // NOTE: internal OT.$ API
-        container = typeof(container) == "string" ? OT.$(container) : container;
+        // NOTE: internal openTokInternalApi API
+        container = typeof(container) == "string" ? openTokInternalApi(container) : container;
 
         // TODO: should we add event hooks to external globals like this?
         // this could be left as a responsibility of the user, and i think that would be more sound
